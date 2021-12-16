@@ -1,5 +1,7 @@
 import React from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => {
@@ -73,11 +75,16 @@ const useStyles = makeStyles(() => {
   };
 });
 
-const MenuItem = ({ title: menuTitle, imageUrl, size }) => {
+const MenuItem = ({ title: menuTitle, imageUrl, size, linkUrl }) => {
   const { menuItem, content, title, subTitle, menuItemImage } = useStyles();
 
+  const navigate = useNavigate();
+
   return (
-    <div className={`${size} ${menuItem}`}>
+    <div
+      className={`${size} ${menuItem}`}
+      onClick={() => navigate(`/${linkUrl}`)}
+    >
       <div
         style={{ backgroundImage: `url(${imageUrl})` }}
         className={menuItemImage}
