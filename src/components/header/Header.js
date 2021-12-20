@@ -1,9 +1,14 @@
 import React from "react";
+
 import { makeStyles } from "@mui/styles";
 
 import { Link } from "react-router-dom";
 
 import { ReactComponent as Logo } from "../../assets/crown.svg";
+
+import { auth } from "../../firebase/firebase.utils";
+
+import { signOut } from "firebase/auth";
 
 const useStyles = makeStyles(() => {
   return {
@@ -31,11 +36,12 @@ const useStyles = makeStyles(() => {
 
     option: {
       padding: "10px 15px",
+      cursor: "pointer",
     },
   };
 });
 
-const Header = () => {
+const Header = ({ currentUser }) => {
   const { header, logoContainer, logo, options, option } = useStyles();
 
   return (
@@ -50,6 +56,13 @@ const Header = () => {
         <Link to="/contact" className={option}>
           CONTACT
         </Link>
+        {currentUser ? (
+          <div className={option} onClick={() => signOut(auth)}>
+            SIGN OUT
+          </div>
+        ) : (
+          <Link to="/signin">SIGN IN</Link>
+        )}
       </div>
     </div>
   );
