@@ -8,22 +8,42 @@ import ShopPage from "./pages/shop/ShopPage";
 import Header from "./components/header/Header";
 import SignInAndUp from "./pages/signin-and-signup/SignInAndUp";
 
-import { auth } from "../src/firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument,
+} from "../src/firebase/firebase.utils";
 
 import { onAuthStateChanged } from "firebase/auth";
+import { onSnapshot } from "firebase/firestore";
 
 function App() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, (user) => {
-      setCurrentUser(user);
-      console.log(currentUser);
+    const unsubAuth = onAuthStateChanged(auth, async (userAuth) => {
+      if (userAuth) {
+        const userDoc = await createUserProfileDocument(userAuth);
+        onSnapshot(userDoc, (doc) => {
+          setCurrentUser({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+      } else {
+        setCurrentUser(userAuth);
+      }
     });
+
     return () => {
       unsubAuth();
     };
   }, []);
+
+  useEffect(() => {
+    if (currentUser) {
+      console.log("currentUser", currentUser);
+    }
+  }, [currentUser]);
 
   return (
     <div className="App">

@@ -5,12 +5,14 @@ import { makeStyles } from "@mui/styles";
 import FormInput from "../form-input/FormInput";
 import CustomButton from "../custom-button/CustomButton";
 
-import { signInWithGoogle } from "../../firebase/firebase.utils";
+import { auth, signInWithGoogle } from "../../firebase/firebase.utils";
+
+import { signInWithEmailAndPassword } from "firebase/auth";
 
 const useStyles = makeStyles(() => {
   return {
     signIn: {
-      width: "390px",
+      width: "380px",
       display: "flex",
       flexDirection: "column",
     },
@@ -31,10 +33,18 @@ const SignIn = () => {
 
   const { signIn, title, buttons } = useStyles();
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    setSignInUser({ email: "", password: "" });
+    const { email, password } = signInUser;
+
+    await signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        setSignInUser({ email: "", password: "" });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
   };
 
   const handleChange = (event) => {
@@ -53,6 +63,7 @@ const SignIn = () => {
           label="Email"
           value={signInUser.email}
           handleChange={handleChange}
+          required
         />
         <FormInput
           type="password"
@@ -60,6 +71,7 @@ const SignIn = () => {
           label="Password"
           value={signInUser.password}
           handleChange={handleChange}
+          required
         />
 
         <div className={buttons}>
