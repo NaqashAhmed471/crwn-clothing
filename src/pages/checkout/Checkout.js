@@ -10,6 +10,7 @@ import { useSelector } from "react-redux";
 import { makeStyles } from "@mui/styles";
 
 import CheckOutItem from "../../components/checkout-item/CheckOutItem";
+import StripeButton from "../../components/stripe-button/StripeButton";
 
 const useStyles = makeStyles(() => {
   return {
@@ -20,6 +21,11 @@ const useStyles = makeStyles(() => {
       flexDirection: "column",
       alignItems: "center",
       margin: "50px auto 0",
+
+      "& button": {
+        marginLeft: "auto",
+        marginTop: "50px",
+      },
     },
 
     checkOutHeader: {
@@ -41,15 +47,23 @@ const useStyles = makeStyles(() => {
 
     total: {
       fontSize: "30px",
-      marginLeft: "80%",
+      marginLeft: "auto",
       fontWeight: "lighter",
       marginTop: "25px",
+    },
+
+    testWarning: {
+      textAlign: "center",
+      marginTop: "40px",
+      fontSize: "24px",
+      color: "red",
     },
   };
 });
 
 const Checkout = () => {
-  const { checkOutPage, checkOutHeader, headerBlock, total } = useStyles();
+  const { checkOutPage, checkOutHeader, headerBlock, total, testWarning } =
+    useStyles();
 
   const cartItems = useSelector(selectCartItems);
 
@@ -80,6 +94,12 @@ const Checkout = () => {
       <div className={total}>
         <span>TOTAL: $ {cartTotal} </span>
       </div>
+      <div className={testWarning}>
+        *Please use the following test credit card for payment*
+        <br />
+        4242 4242 4242 4242 - Exp : 1/20 - CVV:123
+      </div>
+      <StripeButton price={cartTotal} />
     </div>
   );
 };
