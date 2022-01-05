@@ -1,12 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import "./App.css";
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import HomePage from "./pages/homepage/HomePage";
 import ShopPage from "./pages/shop/ShopPage";
+import Checkout from "./pages/checkout/Checkout";
 import Header from "./components/header/Header";
 import SignInAndUp from "./pages/signin-and-signup/SignInAndUp";
+
+import { setCurrentUser } from "./redux/user/userAction";
+import { selectCurrentUser } from "./redux/user/userSelectors";
+
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   auth,
@@ -17,20 +23,25 @@ import { onAuthStateChanged } from "firebase/auth";
 import { onSnapshot } from "firebase/firestore";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const dispatch = useDispatch();
+
+  const currentUser = useSelector(selectCurrentUser);
+  console.log("currentUser", currentUser);
 
   useEffect(() => {
     const unsubAuth = onAuthStateChanged(auth, async (userAuth) => {
       if (userAuth) {
         const userDoc = await createUserProfileDocument(userAuth);
         onSnapshot(userDoc, (doc) => {
-          setCurrentUser({
-            id: doc.id,
-            ...doc.data(),
-          });
+          dispatch(
+            setCurrentUser({
+              id: doc.id,
+              ...doc.data(),
+            })
+          );
         });
       } else {
-        setCurrentUser(userAuth);
+        dispatch(setCurrentUser(userAuth));
       }
     });
 
@@ -39,19 +50,17 @@ function App() {
     };
   }, []);
 
-  useEffect(() => {
-    if (currentUser) {
-      console.log("currentUser", currentUser);
-    }
-  }, [currentUser]);
-
   return (
     <div className="App">
-      <Header currentUser={currentUser} />
+      <Header />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/shop" element={<ShopPage />} />
-        <Route path="/signin" element={<SignInAndUp />} />
+        <Route path="/shop/*" element={<ShopPage />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route
+          path="/signin"
+          element={currentUser ? <Navigate to="/" /> : <SignInAndUp />}
+        />
       </Routes>
     </div>
   );

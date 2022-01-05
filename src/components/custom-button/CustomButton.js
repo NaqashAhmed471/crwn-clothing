@@ -18,6 +18,9 @@ const useStyles = makeStyles(() => {
       fontWeight: "bolder",
       border: "none",
       cursor: "pointer",
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
 
       "&:hover": {
         backgroundColor: "white",
@@ -36,15 +39,39 @@ const useStyles = makeStyles(() => {
         color: "white",
       },
     },
+
+    inverted: {
+      width: "80%",
+      opacity: "0.7",
+      position: "absolute",
+      top: "255px",
+      backgroundColor: "white",
+      color: "black",
+      border: "1px solid black",
+      display: "none",
+
+      "&:hover": {
+        backgroundColor: "black",
+        border: "none",
+        color: "white",
+      },
+    },
   };
 });
 
-const CustomButton = ({ children, isGoogleSignIn, ...otherProps }) => {
-  const { customButton, googleSignIn } = useStyles();
+const CustomButton = ({
+  children,
+  isGoogleSignIn,
+  isInverted,
+  ...otherProps
+}) => {
+  const { customButton, googleSignIn, inverted } = useStyles();
 
   return (
     <button
-      className={`${isGoogleSignIn ? googleSignIn : ""} ${customButton}`}
+      className={` ${isInverted ? inverted : ""} ${
+        isGoogleSignIn ? googleSignIn : ""
+      } ${customButton}`}
       {...otherProps}
     >
       {children}

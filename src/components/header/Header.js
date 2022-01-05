@@ -8,7 +8,15 @@ import { ReactComponent as Logo } from "../../assets/crown.svg";
 
 import { auth } from "../../firebase/firebase.utils";
 
+import CartIcon from "../cart-icon/CartIcon";
+import CartDropDown from "../cart-dropdown/CartDropDown";
+
 import { signOut } from "firebase/auth";
+
+import { useSelector } from "react-redux";
+
+import { selectCurrentUser } from "../../redux/user/userSelectors";
+import { selectCardHidden } from "../../redux/cart/cartSelectors";
 
 const useStyles = makeStyles(() => {
   return {
@@ -41,8 +49,12 @@ const useStyles = makeStyles(() => {
   };
 });
 
-const Header = ({ currentUser }) => {
+const Header = () => {
   const { header, logoContainer, logo, options, option } = useStyles();
+
+  const currentUser = useSelector(selectCurrentUser);
+
+  const hiddenCart = useSelector(selectCardHidden);
 
   return (
     <div className={header}>
@@ -63,7 +75,9 @@ const Header = ({ currentUser }) => {
         ) : (
           <Link to="/signin">SIGN IN</Link>
         )}
+        <CartIcon />
       </div>
+      {hiddenCart ? null : <CartDropDown />}
     </div>
   );
 };

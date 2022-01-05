@@ -1,16 +1,17 @@
 import React from "react";
 
-import CollectionPreview from "../../components/collection-preview/CollectionPreview";
+import CollectionOverview from "../../components/collection-overview/CollectionOverview";
+import Collection from "../collection/Collection";
 
-import SHOP_DATA from "./ShopData";
+import { Routes, Route } from "react-router-dom";
 
 const ShopPage = () => {
-  const collection = SHOP_DATA;
   return (
     <div className="shopPage">
-      {collection.map(({ id, ...otherCollectionProps }) => {
-        return <CollectionPreview key={id} {...otherCollectionProps} />;
-      })}
+      <Routes>
+        <Route path="/" element={<CollectionOverview />} />
+        <Route path=":collectionId" exact element={<Collection />} />
+      </Routes>
     </div>
   );
 };
