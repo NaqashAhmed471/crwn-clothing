@@ -24,7 +24,7 @@ import { onSnapshot } from "firebase/firestore";
 
 function App() {
   const dispatch = useDispatch();
-
+  console.log("task2");
   const currentUser = useSelector(selectCurrentUser);
   console.log("currentUser", currentUser);
 
