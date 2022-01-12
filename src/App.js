@@ -9,45 +9,18 @@ import Checkout from "./pages/checkout/Checkout";
 import Header from "./components/header/Header";
 import SignInAndUp from "./pages/signin-and-signup/SignInAndUp";
 
-import { setCurrentUser } from "./redux/user/userAction";
 import { selectCurrentUser } from "./redux/user/userSelectors";
+
+import { checkUserSession } from "./redux/user/userAction";
 
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  auth,
-  createUserProfileDocument,
-} from "../src/firebase/firebase.utils";
-
-import { onAuthStateChanged } from "firebase/auth";
-import { onSnapshot } from "firebase/firestore";
-
 function App() {
-  const dispatch = useDispatch();
-  console.log("task2");
   const currentUser = useSelector(selectCurrentUser);
-  console.log("currentUser", currentUser);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const unsubAuth = onAuthStateChanged(auth, async (userAuth) => {
-      if (userAuth) {
-        const userDoc = await createUserProfileDocument(userAuth);
-        onSnapshot(userDoc, (doc) => {
-          dispatch(
-            setCurrentUser({
-              id: doc.id,
-              ...doc.data(),
-            })
-          );
-        });
-      } else {
-        dispatch(setCurrentUser(userAuth));
-      }
-    });
-
-    return () => {
-      unsubAuth();
-    };
+    dispatch(checkUserSession());
   }, []);
 
   return (

@@ -4,6 +4,8 @@ import CollectionItem from "../collection-item/CollectionItem";
 
 import { makeStyles } from "@mui/styles";
 
+import { useNavigate } from "react-router-dom";
+
 const useStyles = makeStyles(() => {
   return {
     collectionPreview: {
@@ -15,6 +17,7 @@ const useStyles = makeStyles(() => {
     title: {
       fontSize: "28px",
       marginBottom: "25px",
+      cursor: "pointer",
     },
 
     preview: {
@@ -24,12 +27,16 @@ const useStyles = makeStyles(() => {
   };
 });
 
-const CollectionPreview = ({ title: collectionTitle, items }) => {
+const CollectionPreview = ({ title: collectionTitle, items, routeName }) => {
   const { collectionPreview, title, preview } = useStyles();
+
+  const navigate = useNavigate();
 
   return (
     <div className={collectionPreview}>
-      <h1 className={title}>{collectionTitle.toUpperCase()}</h1>
+      <h1 className={title} onClick={() => navigate(`${routeName}`)}>
+        {collectionTitle.toUpperCase()}
+      </h1>
       <div className={preview}>
         {items
           .filter((item, index) => index < 4)
@@ -42,3 +49,5 @@ const CollectionPreview = ({ title: collectionTitle, items }) => {
 };
 
 export default CollectionPreview;
+
+// title, items, history, match, routeName;

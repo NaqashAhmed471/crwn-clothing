@@ -5,9 +5,12 @@ import { makeStyles } from "@mui/styles";
 import FormInput from "../form-input/FormInput";
 import CustomButton from "../custom-button/CustomButton";
 
-import { auth, signInWithGoogle } from "../../firebase/firebase.utils";
+import {
+  googleSignInStart,
+  emailSignInStart,
+} from "../../redux/user/userAction";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles(() => {
   return {
@@ -33,18 +36,14 @@ const SignIn = () => {
 
   const { signIn, title, buttons } = useStyles();
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
     const { email, password } = signInUser;
 
-    await signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        setSignInUser({ email: "", password: "" });
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    dispatch(emailSignInStart({ email, password }));
   };
 
   const handleChange = (event) => {
@@ -76,7 +75,11 @@ const SignIn = () => {
 
         <div className={buttons}>
           <CustomButton type="submit">Sign In</CustomButton>
-          <CustomButton onClick={signInWithGoogle} isGoogleSignIn>
+          <CustomButton
+            type="button"
+            onClick={() => dispatch(googleSignInStart())}
+            isGoogleSignIn
+          >
             Sign in with Google
           </CustomButton>
         </div>

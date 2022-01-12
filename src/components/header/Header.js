@@ -6,17 +6,15 @@ import { Link } from "react-router-dom";
 
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 
-import { auth } from "../../firebase/firebase.utils";
-
 import CartIcon from "../cart-icon/CartIcon";
 import CartDropDown from "../cart-dropdown/CartDropDown";
 
-import { signOut } from "firebase/auth";
-
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import { selectCurrentUser } from "../../redux/user/userSelectors";
 import { selectCardHidden } from "../../redux/cart/cartSelectors";
+
+import { signOutStart } from "../../redux/user/userAction";
 
 const useStyles = makeStyles(() => {
   return {
@@ -56,6 +54,8 @@ const Header = () => {
 
   const hiddenCart = useSelector(selectCardHidden);
 
+  const dispatch = useDispatch();
+
   return (
     <div className={header}>
       <Link to="/" className={logoContainer}>
@@ -69,7 +69,7 @@ const Header = () => {
           CONTACT
         </Link>
         {currentUser ? (
-          <div className={option} onClick={() => signOut(auth)}>
+          <div className={option} onClick={() => dispatch(signOutStart())}>
             SIGN OUT
           </div>
         ) : (

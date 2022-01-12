@@ -5,12 +5,9 @@ import { makeStyles } from "@mui/styles";
 import FormInput from "../form-input/FormInput";
 import CustomButton from "../custom-button/CustomButton";
 
-import {
-  auth,
-  createUserProfileDocument,
-} from "../../firebase/firebase.utils.js";
+import { useDispatch } from "react-redux";
 
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { signUpStart } from "../../redux/user/userAction";
 
 const useStyles = makeStyles(() => {
   return {
@@ -34,9 +31,11 @@ const SignUp = () => {
     confirmPassword: "",
   });
 
+  const dispatch = useDispatch();
+
   const { signUp, title } = useStyles();
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const { displayName, email, password, confirmPassword } = signUpUser;
@@ -46,19 +45,7 @@ const SignUp = () => {
       return;
     }
 
-    await createUserWithEmailAndPassword(auth, email, password)
-      .then((Crediantials) => {
-        createUserProfileDocument(Crediantials.user, { displayName });
-        setSignUpUser({
-          displayName: "",
-          email: "",
-          password: "",
-          confirmPassword: "",
-        });
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    dispatch(signUpStart({ displayName, email, password }));
   };
 
   const handleChange = (event) => {
