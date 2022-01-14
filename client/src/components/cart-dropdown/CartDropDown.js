@@ -1,17 +1,14 @@
 import React from "react";
-
-import CustomButton from "../custom-button/CustomButton";
-
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { makeStyles } from "@mui/styles";
 
+import CustomButton from "../custom-button/CustomButton";
 import CartItem from "../cart-item/CartItem";
 
 import { selectCartItems } from "../../redux/cart/cartSelectors";
 import { cartToggle } from "../../redux/cart/cartAction";
-
-import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles(() => {
   return {
