@@ -99,7 +99,8 @@ const Checkout = () => {
         <br />
         4242 4242 4242 4242 - Exp : 1/20 - CVV:123
       </div>
-      <StripeButton price={cartTotal} />
+
+      {cartTotal !== 0 ? <StripeButton price={cartTotal} /> : null}
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,9 @@ import CartItem from "../cart-item/CartItem";
 
 import { selectCartItems } from "../../redux/cart/cartSelectors";
 import { cartToggle } from "../../redux/cart/cartAction";
+import { selectCurrentUser } from "../../redux/user/userSelectors";
+
+import SimpleSnakbar from "../snakbar/SimpleSnakbar";
 
 const useStyles = makeStyles(() => {
   return {
@@ -48,30 +51,46 @@ const useStyles = makeStyles(() => {
 const CartDropDown = () => {
   const { cartDropDown, cartItems, emptyMessage } = useStyles();
 
+  const [open, setOpen] = useState(false);
+
   const cart = useSelector(selectCartItems);
+  const currentUser = useSelector(selectCurrentUser);
 
   let navigate = useNavigate();
 
   const dispatch = useDispatch();
 
+  const handleCloseSnackbar = (event) => {
+    setOpen(false);
+  };
+
   return (
-    <div className={cartDropDown}>
-      <div className={cartItems}>
-        {cart.length ? (
-          cart.map((cartItem) => <CartItem key={cartItem.id} item={cartItem} />)
-        ) : (
-          <span className={emptyMessage}>Your cart is empty</span>
-        )}
+    <>
+      <div className={cartDropDown}>
+        <div className={cartItems}>
+          {cart.length ? (
+            cart.map((cartItem) => (
+              <CartItem key={cartItem.id} item={cartItem} />
+            ))
+          ) : (
+            <span className={emptyMessage}>Your cart is empty</span>
+          )}
+        </div>
+        <CustomButton
+          onClick={() => {
+            if (currentUser) {
+              navigate("/checkout");
+              dispatch(cartToggle());
+            } else {
+              setOpen(true);
+            }
+          }}
+        >
+          GO TO CHECKOUT
+        </CustomButton>
       </div>
-      <CustomButton
-        onClick={() => {
-          navigate("/checkout");
-          dispatch(cartToggle());
-        }}
-      >
-        GO TO CHECKOUT
-      </CustomButton>
-    </div>
+      <SimpleSnakbar open={open} handler={handleCloseSnackbar} />
+    </>
   );
 };
 
